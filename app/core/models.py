@@ -55,9 +55,9 @@ class Category(models.TextChoices):
 
 class Priority(models.TextChoices):
     """Enumerated Priority Choice"""
-    LOW = 'lw', 'Low'
-    MEDIUM = 'md', 'Medium'
-    HIGH = 'hg', 'High'
+    LOW = 'LW', 'Low'
+    MEDIUM = 'MD', 'Medium'
+    HIGH = 'HG', 'High'
 
 
 class Status(models.TextChoices):
@@ -69,7 +69,7 @@ class Status(models.TextChoices):
 
 
 def validate_due_date(value):
-    if value < timezone.now():
+    if value < timezone.now().date():
         raise ValidationError('Due date cannot be in the past.')
 
 
