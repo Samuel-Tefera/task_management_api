@@ -4,6 +4,9 @@ from django.contrib.auth.models import (
     PermissionsMixin,
     AbstractBaseUser,
 )
+from django.core.exceptions import ValidationError
+from django.utils import timezone
+
 
 class UserManager(BaseUserManager):
     """User model manager."""
@@ -42,3 +45,67 @@ class User(AbstractBaseUser, PermissionsMixin):
     REQUIRED_FIELDS = ['first_name', 'last_name']
 
 
+class Category(models.TextChoices):
+    """Enumerated Category Choice"""
+    WORK = 'WRK', 'Work'
+    PERSONAL = 'PRL', 'Personal'
+    STUDY = 'STU', 'Study'
+    OTHER = 'OTR', 'Other'
+
+
+class Priority(models.TextChoices):
+    """Enumerated Priority Choice"""
+    LOW = 'lw', 'Low'
+    MEDIUM = 'md', 'Medium'
+    HIGH = 'hg', 'High'
+
+
+class Status(models.TextChoices):
+    """Enumerated Status Choice"""
+    PENDING = 'PND', 'Pending'
+    IN_PROGRESS = 'IP', 'In Progress'
+    COMPLETED = 'COM', 'Completed'
+    OVERDUE = 'OVD', 'Overdue'
+
+
+def validate_due_date(value):
+    if value < timezone.now():
+        raise ValidationError('Due date cannot be in the past.')
+
+
+class Task(models.Model):
+    """Task Model"""
+    title = models.CharField(max_length=200)
+    description = models.TextField()
+    category = models.CharField(
+        max_length=3,
+        choices=Category.choices,
+        default=Category.OTHER
+    )
+    status = models.CharField(
+        max_length=3,
+        choices=Status.choices,
+        default=Status.PENDING
+    )
+    priority = models.CharField(
+        max_length=2,
+        choices=Priority.choices,
+        default=Priority.MEDIUM
+    )
+    created_at = models.DateField(auto_now_add=True)
+    due_date = models.DateField(validators=[validate_due_date])
+    completed_at = models.DateField(null=True, blank=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    def mark_as_completed(self):
+        self.status = Status.COMPLETED
+        self.completed_at = timezone.now()
+        self.save()
+
+    def duration(self):
+        if self.completed_at:
+            return self.completed_at - self.created_at
+        return None
+
+    def __str__(self):
+        return self.title
