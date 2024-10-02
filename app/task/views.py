@@ -13,7 +13,18 @@ class TaskAPIViewSets(ModelViewSet):
     authentication_classes = [authentication.TokenAuthentication]
 
     def get_queryset(self):
-        return self.queryset.filter(user=self.request.user)
+        queryset = self.queryset
+
+        # Filter by priority and status field
+        priority = self.request.query_params.get('priority')
+        status = self.request.query_params.get('status')
+
+        if priority:
+            queryset = queryset.filter(priority=priority)
+        if status:
+            queryset = queryset.filter(status=status)
+
+        return queryset.filter(user=self.request.user)
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
