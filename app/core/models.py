@@ -102,6 +102,15 @@ class Task(models.Model):
         self.completed_at = timezone.now()
         self.save()
 
+    def check_overdue(self):
+        if self.due_date < timezone.now().date() and self.status != Status.COMPLETED:
+            self.status = Status.OVERDUE
+            self.save()
+
+        if self.due_date > timezone.now().date() and self.status == Status.OVERDUE:
+            self.status = Status.PENDING
+            self.save()
+
     def duration(self):
         if self.completed_at:
             return self.completed_at - self.created_at
