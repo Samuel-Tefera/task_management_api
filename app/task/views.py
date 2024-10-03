@@ -8,10 +8,18 @@ from core.models import Task
 
 class TaskAPIViewSets(ModelViewSet):
     """API view for CRUD on Task"""
-    queryset = Task.objects.all()
+    def _check_overdue():
+        queryset = Task.objects.all()
+        for qs in queryset:
+            qs.check_overdue()
+
+        return queryset
+
+    queryset = _check_overdue()
     serializer_class = TaskDetailSerializer
     permission_classes = [permissions.IsAuthenticated]
     authentication_classes = [authentication.TokenAuthentication]
+
 
     def get_queryset(self):
         queryset = self.queryset
