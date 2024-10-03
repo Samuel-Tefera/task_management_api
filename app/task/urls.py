@@ -11,5 +11,6 @@ router.register('task', views.TaskAPIViewSets)
 app_name = 'task'
 
 urlpatterns = [
-    path('', include(router.urls))
+    path('', include(router.urls)),
+    path('statistic', views.TaskStatisticAPIView.as_view(), name='statistic')
 ]
