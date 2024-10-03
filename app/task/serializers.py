@@ -20,7 +20,18 @@ class TaskSerializer(serializers.ModelSerializer):
         return instance
 
 class TaskDetailSerializer(TaskSerializer):
-    """Serializer doe Task detail view. """
+    """Serializer for Task detail view. """
     class Meta:
         model = Task
         fields = TaskSerializer.Meta.fields + ['description', 'completed_at']
+
+
+class TaskStatisticSerializer(serializers.Serializer):
+    """Serailizer for Task Statistic."""
+    total_tasks = serializers.IntegerField()
+    completed_tasks = serializers.IntegerField()
+    in_progress_tasks = serializers.IntegerField()
+    pending_tasks = serializers.IntegerField()
+    overdue_tasks = serializers.IntegerField()
+    completion_percentage = serializers.FloatField()
+    completion_percentage_per_priority = serializers.DictField()
