@@ -7,7 +7,10 @@ class TaskSerializer(serializers.ModelSerializer):
     """Serializer for Task Model."""
     class Meta:
         model = Task
-        fields = ['id', 'title', 'category', 'status', 'priority', 'created_at', 'due_date']
+        fields = [
+                'id', 'title', 'category', 'status', 'priority',
+                'created_at', 'due_date', 'completed_at'
+            ]
 
     def create(self, validated_data):
         return Task.objects.create(**validated_data)
@@ -23,7 +26,7 @@ class TaskDetailSerializer(TaskSerializer):
     """Serializer for Task detail view. """
     class Meta:
         model = Task
-        fields = TaskSerializer.Meta.fields + ['description', 'completed_at']
+        fields = TaskSerializer.Meta.fields + ['description']
 
 
 class TaskStatisticSerializer(serializers.Serializer):
