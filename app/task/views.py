@@ -8,14 +8,14 @@ from core.models import Task
 
 class TaskAPIViewSets(ModelViewSet):
     """API view for CRUD on Task"""
-    def _check_overdue():
+    def _check_status():
         queryset = Task.objects.all()
         for qs in queryset:
-            qs.check_overdue()
+            qs.check_status()
 
         return queryset
 
-    queryset = _check_overdue()
+    queryset = _check_status()
     serializer_class = TaskDetailSerializer
     permission_classes = [permissions.IsAuthenticated]
     authentication_classes = [authentication.TokenAuthentication]
@@ -33,7 +33,7 @@ class TaskAPIViewSets(ModelViewSet):
         if status:
             queryset = queryset.filter(status=status)
 
-        return queryset.filter(user=self.request.user)
+        return queryset.filter(user=self.request.user).order_by('due_date')
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
@@ -46,10 +46,6 @@ class TaskAPIViewSets(ModelViewSet):
     def update(self, request, *args, **kwargs):
         partial = request.method == 'PATCH'
         instance = self.get_object()
-
-        if 'is_completed' in request.data and request.data['is_completed'] == 'true':
-            instance.mark_as_completed()
-            return Response(self.get_serializer(instance).data)
         serializer = self.get_serializer(instance, data=request.data, partial=partial)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
