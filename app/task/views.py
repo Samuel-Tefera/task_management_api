@@ -1,7 +1,9 @@
 from rest_framework.viewsets import ModelViewSet, generics
+from rest_framework.response import Response
 from rest_framework import authentication
 from rest_framework import permissions
-from rest_framework.response import Response
+
+from django.db.models import Case, When
 
 from task.serializers import TaskSerializer, TaskDetailSerializer, TaskStatisticSerializer
 from core.models import Task
@@ -22,7 +24,8 @@ class TaskAPIViewSets(ModelViewSet):
 
 
     def get_queryset(self):
-        queryset = self.queryset
+        queryset = self.queryset.filter(user=self.request.user)
+
 
         # Filter by priority and status field
         priority = self.request.query_params.get('priority')
@@ -33,7 +36,20 @@ class TaskAPIViewSets(ModelViewSet):
         if status:
             queryset = queryset.filter(status=status)
 
-        return queryset.filter(user=self.request.user).order_by('due_date')
+        # Sort by due_date or priority(high, medium, low)
+        sort_by = self.request.query_params.get('sort_by', None)
+        if sort_by == 'due_date':
+            return queryset.order_by('due_date')
+        if sort_by == 'priority':
+            return queryset.order_by(
+                Case(
+                    When(priority='HG', then=1),
+                    When(priority='MD', then=2),
+                    When(priority='LW', then=3)
+                )
+            )
+
+        return queryset
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
