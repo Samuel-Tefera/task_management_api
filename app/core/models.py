@@ -118,8 +118,8 @@ class Task(models.Model):
     def duration(self):
         if self.completed_at:
             diffrence = (self.completed_at - self.created_at)
-            return f'{diffrence.days} days'
+            return diffrence.days
         return None
 
     def __str__(self):
-        return self.title   
+        return self.title

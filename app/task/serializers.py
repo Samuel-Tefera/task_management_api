@@ -15,7 +15,7 @@ class TaskSerializer(serializers.ModelSerializer):
             ]
 
     def get_duration(self, obj):
-        return obj.duration() if obj.duration() else 'Task not completed yet!'
+        return f'{obj.duration()} days' if obj.duration() else 'Task not completed yet!'
 
     def create(self, validated_data):
         return Task.objects.create(**validated_data)
