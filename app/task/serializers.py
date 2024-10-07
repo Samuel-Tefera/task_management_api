@@ -5,12 +5,17 @@ from core.models import Task
 
 class TaskSerializer(serializers.ModelSerializer):
     """Serializer for Task Model."""
+    duration = serializers.SerializerMethodField()
+
     class Meta:
         model = Task
         fields = [
                 'id', 'title', 'category', 'status', 'priority',
-                'created_at', 'due_date', 'completed_at'
+                'created_at', 'due_date', 'completed_at', 'duration'
             ]
+
+    def get_duration(self, obj):
+        return obj.duration() if obj.duration() else 'Task not completed yet!'
 
     def create(self, validated_data):
         return Task.objects.create(**validated_data)
@@ -21,6 +26,7 @@ class TaskSerializer(serializers.ModelSerializer):
 
         instance.save()
         return instance
+
 
 class TaskDetailSerializer(TaskSerializer):
     """Serializer for Task detail view. """

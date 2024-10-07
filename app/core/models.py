@@ -6,7 +6,7 @@ from django.contrib.auth.models import (
 )
 from django.core.exceptions import ValidationError
 from django.utils import timezone
-
+from datetime import datetime
 
 class UserManager(BaseUserManager):
     """User model manager."""
@@ -117,8 +117,9 @@ class Task(models.Model):
 
     def duration(self):
         if self.completed_at:
-            return self.completed_at - self.created_at
+            diffrence = (self.completed_at - self.created_at)
+            return f'{diffrence.days} days'
         return None
 
     def __str__(self):
-        return self.title
+        return self.title   
