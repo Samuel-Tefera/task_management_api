@@ -30,11 +30,14 @@ class TaskAPIViewSets(ModelViewSet):
         # Filter by priority and status field
         priority = self.request.query_params.get('priority')
         status = self.request.query_params.get('status')
+        category = self.request.query_params.get('category')
 
         if priority:
             queryset = queryset.filter(priority=priority)
         if status:
             queryset = queryset.filter(status=status)
+        if category:
+            queryset = queryset.filter(category=category)
 
         # Sort by due_date or priority(high, medium, low)
         sort_by = self.request.query_params.get('sort_by', None)
