@@ -52,7 +52,7 @@ Ensure the following are installed:
    ```
 2. **Navigate to the project directory:**
    ```bash
-   cd TaskManagementAPI
+   cd task_management_api
    ```
 3. **Install dependencies:**
    ```bash
@@ -117,4 +117,3 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 Special thanks to:
 - Django and Django REST Framework communities
 - OpenAI for technical guidance
-```
