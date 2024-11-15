@@ -49,7 +49,7 @@ Ensure the following are installed:
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/yourusername/TaskManagementAPI.git
+   https://github.com/Samuel-Tefera/task_management_api.git
    ```
 2. **Navigate to the project directory:**
    ```bash
