@@ -41,7 +41,6 @@ The **Task Management API** is a robust backend service that helps users organiz
 Ensure the following are installed:
 - Python 3.9+
 - PostgreSQL
-- Git
 
 ---
 
@@ -49,7 +48,7 @@ Ensure the following are installed:
 
 1. **Clone the repository:**
    ```bash
-   https://github.com/Samuel-Tefera/task_management_api.git
+   git clone https://github.com/Samuel-Tefera/task_management_api.git
    ```
 2. **Navigate to the project directory:**
    ```bash
@@ -94,7 +93,7 @@ DB_PORT=5432
 
 ## Documentation
 
-Detailed API documentation, including endpoints and usage, is available in the [API Documentation](docs/api_endpoints.md).
+Detailed API documentation, including endpoints and usage, is available in the [API Documentation](docs/api_endpoint.md).
 
 
 ## Contributing
